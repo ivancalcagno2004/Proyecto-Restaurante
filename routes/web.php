@@ -12,6 +12,10 @@ Route::resource('pedidos', PedidosController::class);
 Route::get('/mesas/{id}/edit', [MesasController::class, 'edit'])->name('mesas.edit');
 Route::post('/mesas/{id}', [MesasController::class, 'update'])->name('mesas.update');
 
+Route::get('/map', function () {
+    return view('pages.map');
+})->name('pages.map');
+
 Route::get('/', function () {
     return view('pages.inicio');
 });
