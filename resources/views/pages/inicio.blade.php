@@ -5,22 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Restaurante</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
-    <header>
-
-    </header>
+    @include('templates.header')
 
     <section>
         @yield('content')
     </section>
-    <h1>hola</h1>
 
-    <footer>
-
-    </footer>
+    @include('templates.footer')
+    <script src="https://cdn.jsdelivr.net/npm/fabric@5.3.0/dist/fabric.min.js"></script>
 </body>
 
 </html>
