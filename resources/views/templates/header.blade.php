@@ -6,6 +6,7 @@
                 <a href="{{ route('mesas.index') }}" class="text-gray-300 hover:text-white mx-2">Mesas</a>
                 <a href="{{ route('productos.index') }}" class="text-gray-300 hover:text-white mx-2">Productos</a>
                 <a href="{{ route('pedidos.index') }}" class="text-gray-300 hover:text-white mx-2">Pedidos</a>
+                <a href="{{ route('pages.map') }}" class="text-gray-300 hover:text-white mx-2">Ver Salón</a>
             </div>
         </div>
     </nav>
