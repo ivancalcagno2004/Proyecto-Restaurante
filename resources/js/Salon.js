@@ -6,18 +6,45 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof mesas !== 'undefined') {
         // Agregar mesas al canvas
         mesas.forEach(mesa => {
+            let color;
+            switch (mesa.estado) {
+                case 'disponible':
+                    color = '#1CCD8CFF'; // Verde pastel para disponible
+                    break;
+                case 'reservada':
+                    color = '#FFCD37FF'; // Amarillo pastel para reservada
+                    break;
+                case 'ocupada':
+                    color = '#ED362DFF'; // Rojo pastel para ocupada
+                    break;
+                default:
+                    color = '#D3D3D3'; // Gris claro para estados desconocidos
+            }
+
+            let width = 90;
+            let height = 90;
+
+            if (mesa.capacidad >= 4) {
+                width += mesa.capacidad * 10; // Aumentar el ancho según la capacidad
+            }
+
+            const borderRadius = 10;
+            const posX = mesa.x !== 50 ? mesa.x : Math.random() * 1000;
+            const posY = mesa.y !== 50 ? mesa.y : Math.random() * 1000;
             const mesaRect = new fabric.Rect({
-                left: mesa.x || 50, // Posición X (por defecto 50 si no está definida)
-                top: mesa.y || 50,  // Posición Y (por defecto 50 si no está definida)
-                fill: 'green',      // Color de la mesa
-                width: 80,          // Ancho de la mesa
-                height: 80,         // Altura de la mesa
+                left: posX, // Posición X (por defecto 50 si no está definida)
+                top: posY,  // Posición Y (por defecto 50 si no está definida)
+                fill: color,      // Color de la mesa
+                width: width,          // Ancho de la mesa
+                height: height,         // Altura de la mesa
+                rx: borderRadius, // Radio de las esquinas
+                ry: borderRadius, // Radio de las esquinas
                 id: mesa.id,        // ID de la mesa
                 nombre: mesa.nombre // Nombre de la mesa
             });
 
             // Agregar texto con el nombre de la mesa
-            const mesaText = new fabric.Text(mesa.nombre, {
+            const mesaText = new fabric.Text(mesa.nombre + "\nCapacidad: " + mesa.capacidad, {
                 left: mesaRect.left + 10,
                 top: mesaRect.top + 30,
                 fontSize: 14,
@@ -32,8 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: mesa.id
             });
 
+            if (mesa.capacidad <= 4) {
+                mesaGroup.set({ lockRotation: true }); // Bloquear rotación para mesas pequeñas
+            }else{
+                mesaGroup.set({ lockRotation: false }); // Permitir rotación para mesas grandes
+            }
+
             // Hacer que la mesa sea movible
-            mesaGroup.set({ hasControls: true, lockRotation: true });
+            mesaGroup.set({ hasControls: true });
 
             // Agregar la mesa al canvas
             canvas.add(mesaGroup);

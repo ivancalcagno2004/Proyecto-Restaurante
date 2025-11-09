@@ -28,9 +28,14 @@ class MesasController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
+            'estado' => 'required|in:disponible,ocupada,reservada',
+            'capacidad' => 'required|integer|min:1|max:20',
+            'x' => 'nullable|numeric',
+            'y' => 'nullable|numeric',
         ]);
 
         Mesas::create($request->all());
+
         return redirect()->route('mesas.index')->with('success', 'Mesa creada exitosamente.');
     }
 
@@ -62,18 +67,24 @@ class MesasController extends Controller
         return redirect()->route('mesas.index')->with('success', 'Mesa eliminada exitosamente.');
     }
 
-    public function updateEstado(Request $request, Mesas $mesa)
+    public function updateMesa(Request $request, $id)
     {
-        // Validar el estado recibido
+        // Buscar la mesa por ID
+        $mesa = Mesas::findOrFail($id);
+
+        // Validar los datos recibidos
         $request->validate([
-            'estado' => 'required|in:disponible,ocupada,reservada',
+            'nombre' => 'nullable|string|max:255',
+            'estado' => 'nullable|in:disponible,ocupada,reservada',
+            'capacidad' => 'nullable|integer|min:1|max:20',
+            'x' => 'nullable|numeric',
+            'y' => 'nullable|numeric',
         ]);
 
-        // Actualizar el estado de la mesa
-        $mesa->estado = $request->estado;
-        $mesa->save();
+        // Actualizar los campos, manteniendo los valores existentes si no se envían
+        $mesa->update(array_merge($mesa->toArray(), $request->only(['nombre', 'estado', 'capacidad', 'x', 'y'])));
 
         // Retornar una respuesta JSON
-        return response()->json(['success' => true, 'estado' => $mesa->estado]);
+        return response()->json(['success' => true, 'mesa' => $mesa]);
     }
 }
