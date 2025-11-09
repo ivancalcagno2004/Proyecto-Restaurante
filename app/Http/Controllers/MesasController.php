@@ -13,6 +13,12 @@ class MesasController extends Controller
         return view('mesas.index', compact('mesas'));
     }
 
+    public function map()
+    {
+        $mesas = Mesas::all(); // Obtén todas las mesas
+        return view('pages.map', compact('mesas')); // Pasa las mesas a la vista
+    }
+
     public function create()
     {
         return view('mesas.create');

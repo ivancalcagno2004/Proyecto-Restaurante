@@ -12,7 +12,7 @@
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
             <thead>
                 <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
-                    <th class="px-6 py-3 text-left">ID</th>
+                    <th class="px-6 py-3 text-left">Capacidad</th>
                     <th class="px-6 py-3 text-left">Nombre</th>
                     <th class="px-6 py-3 text-center">Estado</th>
                     <th class="px-6 py-3 text-center">Acciones</th>

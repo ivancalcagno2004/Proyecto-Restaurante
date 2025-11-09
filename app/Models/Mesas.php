@@ -9,7 +9,7 @@ class Mesas extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'estado'];
+    protected $fillable = ['nombre', 'estado', 'capacidad'];
 
     public $timestamps = false;
 }
