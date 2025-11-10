@@ -16,9 +16,6 @@ COPY . .
 # Instalar dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Generar clave de Laravel (Render usa variables, pero sirve como fallback)
-RUN php artisan key:generate --force
-
 # Exponer el puerto usado por Render
 EXPOSE 10000
 
