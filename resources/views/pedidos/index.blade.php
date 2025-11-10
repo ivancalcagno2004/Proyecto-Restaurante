@@ -28,8 +28,34 @@
                     </td>
 
                     <!-- Estado del pedido -->
-                    <td class="px-6 py-4 text-gray-800 text-center uppercase">
-                        {{ $pedido->estado }}
+                    <td class="px-6 py-4 text-center">
+                        @if (isset($quiereEditar) && $quiereEditar && $pedidoEdit->id == $pedido->id)
+                        <form action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <select name="estado" class="border border-gray-300 rounded px-2 py-1">
+                                <option value="pendiente" {{ $pedido->estado === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                <option value="en_preparacion" {{ $pedido->estado === 'en_preparacion' ? 'selected' : '' }}>Preparando</option>
+                                <option value="servido" {{ $pedido->estado === 'servido' ? 'selected' : '' }}>Servido</option>
+                                <option value="cancelado" {{ $pedido->estado === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                            </select>
+                            <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600 transition cursor-pointer">
+                                Guardar
+                            </button>
+                        </form>
+                        @else
+                        <span class="estado-label">
+                            @if ($pedido->estado === 'pendiente')
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Pendiente</span>
+                            @elseif ($pedido->estado === 'en_preparacion')
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Preparando</span>
+                            @elseif ($pedido->estado === 'servido')
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Servido</span>
+                            @elseif ($pedido->estado === 'cancelado')
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Cancelado</span>
+                            @endif
+                        </span>
+                        @endif
                     </td>
 
                     <!-- Total del pedido -->
@@ -43,17 +69,24 @@
                     </td>
 
                     <!-- Acciones -->
-                    <td class="px-6 py-4 text-gray-800 text-center">
-                        <a href="{{ route('pedidos.show', $pedido->id) }}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition mr-2">
+                    <td class="px-6 py-4 text-center">
+                        @if (isset($quiereEditar) && $quiereEditar && $pedidoEdit->id == $pedido->id)
+                        <a href="{{ route('pedidos.index') }}" class="bg-gray-500 text-white px-2 py-1 rounded ml-2 hover:bg-gray-600 transition cursor-pointer">Cancelar</a>
+                        <a href="{{ route('pedidos.edit-productos', $pedido->id) }}" class="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-blue-600 transition cursor-pointer">
+                            Editar Productos
+                        </a>
+                        @else
+                        <a href="{{ route('pedidos.show', $pedido->id) }}" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition mr-2">
                             Ver Detalles
                         </a>
-                        <a href="{{ route('pedidos.edit', $pedido->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition mr-2">
+                        <a href="{{ route('pedidos.edit', $pedido->id) }}" class="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-blue-600 transition cursor-pointer">
                             Editar
                         </a>
+                        @endif
                         <form action="{{ route('pedidos.destroy', $pedido->id) }}" method="POST" class="inline-block">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition cursor-pointer">
+                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded ml-2 hover:bg-red-600 transition cursor-pointer">
                                 Eliminar
                             </button>
                         </form>

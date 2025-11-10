@@ -82,6 +82,9 @@ class PedidosController extends Controller
     public function show($id)
     {
         $pedido = Pedidos::with('productos')->findOrFail($id);
+        if ($pedido->estado === 'en_preparacion') {
+            $pedido->estado = 'Preparando';
+        }
         return view('pedidos.show', compact('pedido'));
     }
 
@@ -90,7 +93,10 @@ class PedidosController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pedidos = Pedidos::all();
+        $pedidoEdit = Pedidos::findOrFail($id);
+        $quiereEditar = true;
+        return view('pedidos.index', compact('pedidoEdit', 'quiereEditar', 'pedidos'));
     }
 
     /**
@@ -98,7 +104,14 @@ class PedidosController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'estado' => 'required|in:pendiente,en_preparacion,servido,cancelado',
+        ]);
+
+        $pedido = Pedidos::findOrFail($id);
+        $pedido->update(['estado' => $request->estado]);
+
+        return redirect()->route('pedidos.index')->with('success', 'Estado del pedido actualizado correctamente.');
     }
 
     /**
@@ -107,7 +120,62 @@ class PedidosController extends Controller
     public function destroy(string $id)
     {
         $pedido = Pedidos::findOrFail($id);
+        $mesa = Mesas::findOrFail($pedido->mesa_id);
+        $mesa->update(['estado' => 'disponible']);
         $pedido->delete();
         return redirect()->route('pedidos.index')->with('success', 'Pedido eliminado exitosamente.');
+    }
+
+    public function editProductos($id)
+    {
+        $pedido = Pedidos::with('productos')->findOrFail($id); // Cargar el pedido con los productos asociados
+        $productos = Productos::all(); // Obtener todos los productos disponibles
+        return view('pedidos.edit-productos', compact('pedido', 'productos'));
+    }
+
+    public function updateProductos(Request $request, $id)
+    {
+        $pedido = Pedidos::findOrFail($id);
+
+        // Actualizar productos existentes
+        if ($request->has('productos')) {
+            foreach ($request->productos as $productoId => $productoData) {
+                if (isset($productoData['eliminar']) && $productoData['eliminar'] == 1) {
+                    // Eliminar producto del pedido
+                    $pedido->productos()->detach($productoId);
+                } else {
+                    // Actualizar cantidad y subtotal del producto existente
+                    $cantidad = $productoData['cantidad'];
+                    $subtotal = Productos::findOrFail($productoId)->precio * $cantidad;
+                    $pedido->productos()->updateExistingPivot($productoId, [
+                        'cantidad' => $cantidad,
+                        'subtotal' => $subtotal,
+                    ]);
+                }
+            }
+        }
+
+        // Agregar nuevos productos
+        if ($request->has('nuevos_productos')) {
+            foreach ($request->nuevos_productos as $productoId => $productoData) {
+                // Verificar si el producto ya está asociado al pedido
+                if (!$pedido->productos->contains($productoId)) {
+                    $cantidad = $productoData['cantidad'];
+                    $subtotal = Productos::findOrFail($productoId)->precio * $cantidad;
+                    $pedido->productos()->attach($productoId, [
+                        'cantidad' => $cantidad,
+                        'subtotal' => $subtotal,
+                    ]);
+                }
+            }
+        }
+
+        // Recalcular el total del pedido
+        $total = $pedido->productos->sum(function ($producto) {
+            return $producto->pivot->subtotal;
+        });
+        $pedido->update(['total' => $total]);
+
+        return redirect()->route('pedidos.index')->with('success', 'Productos del pedido actualizados correctamente.');
     }
 }

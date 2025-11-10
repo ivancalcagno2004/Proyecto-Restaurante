@@ -17,8 +17,10 @@ Route::post('/mesas/{id}', [MesasController::class, 'updateMesa'])->name('mesas.
 Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
 Route::post('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
 
-
+// pedidos
 Route::get('/pedidos/create/{mesa}', [PedidosController::class, 'create'])->name('pedidos.create');
+Route::get('/pedidos/{pedido}/edit-productos', [PedidosController::class, 'editProductos'])->name('pedidos.edit-productos');
+Route::put('/pedidos/{pedido}/update-productos', [PedidosController::class, 'updateProductos'])->name('pedidos.update-productos');
 
 Route::get('/map', [MesasController::class, 'map'])->name('map');
 
