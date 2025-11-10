@@ -65,6 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 mesaGroup.set({ lockRotation: false }); // Permitir rotación para mesas grandes
             }
 
+            // Agregar evento de doble clic para redirigir al formulario de creación de pedido
+            mesaGroup.on('mousedblclick', () => {
+                window.location.href = `/pedidos/create/${mesa.id}`;
+            });
+
             // Hacer que la mesa sea movible
             mesaGroup.set({ hasControls: true });
 

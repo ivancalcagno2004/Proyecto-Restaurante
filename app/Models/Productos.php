@@ -19,7 +19,7 @@ class Productos extends Model
     public function pedidos()
     {
         return $this->belongsToMany(Pedidos::class, 'pedido_detalles', 'producto_id', 'pedido_id')
-            ->withPivot('cantidad', 'precio')
+            ->withPivot('cantidad', 'subtotal')
             ->withTimestamps();
     }
 }

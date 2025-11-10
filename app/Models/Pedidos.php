@@ -10,10 +10,10 @@ class Pedidos extends Model
     use HasFactory;
 
     // Campos que se pueden asignar masivamente
-    protected $fillable = ['mesa_id', 'estado', 'total', 'fecha'];
+    protected $fillable = ['mesa_id', 'estado', 'total'];
 
     // Deshabilitar timestamps si no usas created_at y updated_at
-    public $timestamps = false;
+    //public $timestamps = false;
 
     // Relación con el modelo Mesas (un pedido pertenece a una mesa)
     public function mesa()
@@ -25,7 +25,7 @@ class Pedidos extends Model
     public function productos()
     {
         return $this->belongsToMany(Productos::class, 'pedido_detalles', 'pedido_id', 'producto_id')
-            ->withPivot('cantidad', 'precio')
+            ->withPivot('cantidad', 'subtotal')
             ->withTimestamps();
     }
 }
