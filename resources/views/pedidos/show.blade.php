@@ -46,6 +46,9 @@
         <a href="{{ route('pedidos.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
             Volver a la lista de pedidos
         </a>
+        <a href="{{ route('pedidos.edit-productos', $pedido->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded ml-2 hover:bg-blue-600 transition cursor-pointer">
+            Editar Productos
+        </a>
     </div>
 </div>
 @endsection

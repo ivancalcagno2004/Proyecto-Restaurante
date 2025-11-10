@@ -65,11 +65,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 mesaGroup.set({ lockRotation: false }); // Permitir rotación para mesas grandes
             }
 
-            // Agregar evento de doble clic para redirigir al formulario de creación de pedido
             mesaGroup.on('mousedblclick', () => {
-                window.location.href = `/pedidos/create/${mesa.id}`;
+                if (mesa.estado === 'disponible' || mesa.estado === 'reservada') {
+                    // Redirigir al formulario de creación de pedido
+                    window.location.href = `/pedidos/create/${mesa.id}`;
+                } else {
+                    // Obtener el ID del pedido asociado a la mesa
+                    fetch(`/mesas/${mesa.id}/pedido`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('No se encontró un pedido asociado a esta mesa.');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.pedido_id) {
+                                // Redirigir a los detalles del pedido
+                                window.location.href = `/pedidos/${data.pedido_id}`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('No se encontró un pedido asociado a esta mesa.');
+                        });
+                }
             });
-
+            
             // Hacer que la mesa sea movible
             mesaGroup.set({ hasControls: true });
 

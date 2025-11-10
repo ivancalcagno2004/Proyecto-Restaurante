@@ -11,10 +11,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body>
+<body class="min-h-screen flex flex-col">
     @include('templates.header')
 
-    <section>
+    <section class="flex-grow">
         @yield('content')
     </section>
 

@@ -85,6 +85,11 @@ class PedidosController extends Controller
         if ($pedido->estado === 'en_preparacion') {
             $pedido->estado = 'Preparando';
         }
+
+        // Recalcular subtotales dinámicamente
+        foreach ($pedido->productos as $producto) {
+            $producto->pivot->subtotal = $producto->precio * $producto->pivot->cantidad;
+        }
         return view('pedidos.show', compact('pedido'));
     }
 
@@ -170,12 +175,22 @@ class PedidosController extends Controller
             }
         }
 
-        // Recalcular el total del pedido
-        $total = $pedido->productos->sum(function ($producto) {
-            return $producto->pivot->subtotal;
-        });
+        // Recalcular el total del pedido directamente desde la base de datos
+        $total = $pedido->productos()->sum('pedido_detalles.subtotal');
         $pedido->update(['total' => $total]);
 
         return redirect()->route('pedidos.index')->with('success', 'Productos del pedido actualizados correctamente.');
+    }
+
+    public function getPedidoByMesa($id)
+    {
+        // Buscar el pedido asociado a la mesa
+        $pedido = Pedidos::where('mesa_id', $id)->where('estado', '!=', 'completado')->first();
+
+        if ($pedido) {
+            return response()->json(['pedido_id' => $pedido->id]);
+        }
+
+        return response()->json(['error' => 'No se encontró un pedido asociado a esta mesa.'], 404);
     }
 }

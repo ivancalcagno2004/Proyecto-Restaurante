@@ -50,12 +50,12 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-4 text-gray-800 text-center">
                             <label>
-                                <input type="checkbox" name="nuevos_productos[{{ $producto->id }}][id]" value="{{ $producto->id }}">
+                                <input type="checkbox" name="nuevos_productos[{{ $producto->id }}][id]" value="{{ $producto->id }}" class="nuevo-producto-checkbox">
                                 {{ $producto->nombre }}
                             </label>
                         </td>
                         <td class="px-6 py-4 text-gray-800 text-center">
-                            <input type="number" name="nuevos_productos[{{ $producto->id }}][cantidad]" value="1" min="1" class="w-20 border border-gray-300 rounded-lg px-2 py-1">
+                            <input type="number" name="nuevos_productos[{{ $producto->id }}][cantidad]" value="1" min="1" class="w-20 border border-gray-300 rounded-lg px-2 py-1 nuevo-producto-cantidad" disabled>
                         </td>
                     </tr>
                     @endforeach
@@ -73,4 +73,17 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('.nuevo-producto-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const cantidadInput = e.target.closest('tr').querySelector('.nuevo-producto-cantidad');
+                cantidadInput.disabled = !e.target.checked;
+            });
+        });
+    });
+
+</script>
 @endsection

@@ -84,6 +84,20 @@ class ProductosController extends Controller
 
         // Buscar el producto y actualizarlo
         $producto->update($request->all());
+
+        // Actualizar los subtotales en la tabla pivote para los pedidos existentes
+        $pedidos = $producto->pedidos; // Obtener los pedidos asociados al producto
+        foreach ($pedidos as $pedido) {
+            $cantidad = $pedido->pivot->cantidad; // Obtener la cantidad del producto en el pedido
+            $subtotal = $producto->precio * $cantidad; // Recalcular el subtotal
+            $pedido->productos()->updateExistingPivot($producto->id, [
+                'subtotal' => $subtotal,
+            ]);
+
+            // Recalcular el total del pedido
+            $total = $pedido->productos()->sum('pedido_detalles.subtotal'); // Sumar los subtotales
+            $pedido->update(['total' => $total]); // Actualizar el total del pedido
+        }
         // Redirigir al índice con un mensaje de éxito
         return redirect()->route('productos.index')->with('success', 'Producto actualizado exitosamente.');
     }
