@@ -51,20 +51,26 @@ class PedidosController extends Controller
         $total = 0;
 
         // Asociar productos al pedido
-        foreach ($request->productos as $productoId => $productoData) {
-            $producto = Productos::findOrFail($productoId); // Obtener el producto
-            $subtotal = $producto->precio * $productoData['cantidad']; // Calcular el subtotal
+        foreach ($request->productos as $productoData) {
+            $productoId = $productoData['id']; // Obtener el ID del producto desde el array
+            $producto = Productos::findOrFail($productoId); // Buscar el producto en la base de datos
+            $cantidad = $productoData['cantidad']; // Obtener la cantidad
+            $subtotal = $producto->precio * $cantidad; // Calcular el subtotal
             $total += $subtotal; // Sumar al total del pedido
 
             // Asociar el producto al pedido en la tabla pivote
             $pedido->productos()->attach($productoId, [
-                'cantidad' => $productoData['cantidad'],
+                'cantidad' => $cantidad,
                 'subtotal' => $subtotal,
             ]);
         }
 
         // Actualizar el total del pedido
         $pedido->update(['total' => $total]);
+
+        // Cambiar el estado de la mesa a "ocupada"
+        $mesa = Mesas::findOrFail($request->mesa_id);
+        $mesa->update(['estado' => 'ocupada']);
 
         // Redirigir al índice de pedidos con un mensaje de éxito
         return redirect()->route('pedidos.index')->with('success', 'Pedido creado exitosamente.');

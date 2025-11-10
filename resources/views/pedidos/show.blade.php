@@ -31,9 +31,9 @@
                 <tr class="border-b hover:bg-gray-50">
                     <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->nombre }}</td>
                     <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->pivot->cantidad }}</td>
-                    <td class="px-6 py-4 text-gray-800 text-center">${{ number_format($producto->pivot->subtotal, 2) }}</td>
+                    <td class="px-6 py-4 text-gray-800 text-center">${{ number_format($producto->pivot->subtotal / $producto->pivot->cantidad, 2) }}</td>
                     <td class="px-6 py-4 text-gray-800 text-center">
-                        ${{ number_format($producto->pivot->cantidad * $producto->pivot->subtotal, 2) }}
+                        ${{ number_format($producto->pivot->subtotal, 2) }}
                     </td>
                 </tr>
                 @endforeach
