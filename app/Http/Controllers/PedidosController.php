@@ -24,8 +24,9 @@ class PedidosController extends Controller
     public function create($mesaId)
     {
         $mesa = Mesas::findOrFail($mesaId);
-        $productos = Productos::all(); // Obtener todos los productos disponibles
-        return view('pedidos.create', compact('mesa', 'productos'));
+        $productos = Productos::orderBy('categoria')->orderBy('nombre')->get()->groupBy('categoria'); // Obtener todos los productos disponibles
+        $categorias = $productos->keys()->toArray();
+        return view('pedidos.create', compact('mesa', 'productos', 'categorias'));
     }
 
     /**
