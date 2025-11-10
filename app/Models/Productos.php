@@ -10,7 +10,7 @@ class Productos extends Model
     use HasFactory;
 
     // Campos que se pueden asignar masivamente
-    protected $fillable = ['nombre', 'descripcion', 'precio', 'stock'];
+    protected $fillable = ['nombre', 'descripcion', 'precio', 'categoria', 'stock'];
 
     // Deshabilitar timestamps si no usas created_at y updated_at
     public $timestamps = false;

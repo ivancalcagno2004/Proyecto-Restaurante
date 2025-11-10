@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     color = '#D3D3D3'; // Gris claro para estados desconocidos
             }
 
-            let width = 90;
-            let height = 90;
+            let width = 120;
+            let height = 120;
 
             if (mesa.capacidad >= 4) {
                 width += mesa.capacidad * 10; // Aumentar el ancho según la capacidad
@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Agregar texto con el nombre de la mesa
             const mesaText = new fabric.Text(mesa.nombre + "\nCapacidad: " + mesa.capacidad, {
                 left: mesaRect.left + 10,
-                top: mesaRect.top + 30,
-                fontSize: 14,
+                top: mesaRect.top + 40,
+                fontSize: 18,
                 fill: 'white',
                 selectable: false // El texto no será seleccionable
             });

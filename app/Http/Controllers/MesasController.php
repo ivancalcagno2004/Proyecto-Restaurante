@@ -48,19 +48,6 @@ class MesasController extends Controller
         return view('mesas.index', compact('mesas', 'mesaEdit', 'quiereEditar')); // Pasa las variables a la vista
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'estado' => 'required|in:disponible,ocupada,reservada', // Valida el estado
-        ]);
-
-        $mesa = Mesas::findOrFail($id);
-        $mesa->estado = $request->estado; // Actualiza el estado
-        $mesa->save();
-
-        return redirect()->route('mesas.index')->with('success', 'Estado actualizado correctamente.');
-    }
-
     public function destroy(Mesas $mesa)
     {
         $mesa->delete();
@@ -85,6 +72,6 @@ class MesasController extends Controller
         $mesa->update(array_merge($mesa->toArray(), $request->only(['nombre', 'estado', 'capacidad', 'x', 'y'])));
 
         // Retornar una respuesta JSON
-        return response()->json(['success' => true, 'mesa' => $mesa]);
+        return redirect()->route('mesas.index')->with('success', 'Mesa editada exitosamente.');
     }
 }
