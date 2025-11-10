@@ -104,8 +104,12 @@
                             </button>
                         </form>
                         @else
+                        @if($producto->stock >= 1)
                         {{ $producto->stock }}
-                        @endif
+                        @else
+                        <span class="text-gray-400 italic">Sin stock</span>
+                        @endif {{-- cierra if --}}
+                        @endif {{-- cierra if --}}
                     </td>
                     <td class="px-6 py-4 text-center flex items-center">
                         @if (isset($quiereEditar) && $quiereEditar && $productoEdit->id == $producto->id)

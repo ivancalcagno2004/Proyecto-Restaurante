@@ -25,7 +25,11 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->nombre }}</td>
                         <td class="px-6 py-4 text-gray-800 text-center">
-                            <input type="number" name="productos[{{ $producto->id }}][cantidad]" value="{{ $producto->pivot->cantidad }}" min="1" class="w-20 border border-gray-300 rounded-lg px-2 py-1">
+                            @if($producto->stock >= 1)
+                            <input type="number" name="productos[{{ $producto->id }}][cantidad]" value="{{ $producto->pivot->cantidad }}" min="1" max="{{$producto->stock}}" class="w-20 border border-gray-300 rounded-lg px-2 py-1">
+                            @else
+                            <input type="number" name="productos[{{ $producto->id }}][cantidad]" value="{{ $producto->pivot->cantidad }}" min="1" max="{{$producto->stock}}" class="w-20 border border-gray-300 rounded-lg px-2 py-1" disabled>
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-gray-800 text-center">
                             <input type="checkbox" name="productos[{{ $producto->id }}][eliminar]" value="1">
@@ -55,7 +59,11 @@
                             </label>
                         </td>
                         <td class="px-6 py-4 text-gray-800 text-center">
-                            <input type="number" name="nuevos_productos[{{ $producto->id }}][cantidad]" value="1" min="1" class="w-20 border border-gray-300 rounded-lg px-2 py-1 nuevo-producto-cantidad" disabled>
+                            @if($producto->stock >= 1)
+                            <input type="number" name="nuevos_productos[{{ $producto->id }}][cantidad]" value="1" min="1" max="{{$producto->stock}}" class="w-20 border border-gray-300 rounded-lg px-2 py-1 nuevo-producto-cantidad" disabled>
+                            @else
+                            <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Sin Stock</span>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

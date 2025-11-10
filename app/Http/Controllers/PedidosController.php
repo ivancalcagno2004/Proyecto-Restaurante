@@ -55,8 +55,17 @@ class PedidosController extends Controller
             $productoId = $productoData['id']; // Obtener el ID del producto desde el array
             $producto = Productos::findOrFail($productoId); // Buscar el producto en la base de datos
             $cantidad = $productoData['cantidad']; // Obtener la cantidad
+
+            // Verificar si hay suficiente stock
+            if ($producto->stock < $cantidad) {
+                return redirect()->back()->withErrors(['error' => "No hay suficiente stock para el producto {$producto->nombre}."]);
+            }
+
             $subtotal = $producto->precio * $cantidad; // Calcular el subtotal
             $total += $subtotal; // Sumar al total del pedido
+
+            // Reducir el stock del producto
+            $producto->decrement('stock', $cantidad);
 
             // Asociar el producto al pedido en la tabla pivote
             $pedido->productos()->attach($productoId, [
@@ -145,15 +154,37 @@ class PedidosController extends Controller
         // Actualizar productos existentes
         if ($request->has('productos')) {
             foreach ($request->productos as $productoId => $productoData) {
+                $producto = Productos::findOrFail($productoId);
+
                 if (isset($productoData['eliminar']) && $productoData['eliminar'] == 1) {
+                    // Devolver el stock del producto eliminado
+                    $cantidadAnterior = $pedido->productos()->where('producto_id', $productoId)->first()->pivot->cantidad;
+                    $producto->increment('stock', $cantidadAnterior);
+
                     // Eliminar producto del pedido
                     $pedido->productos()->detach($productoId);
                 } else {
                     // Actualizar cantidad y subtotal del producto existente
-                    $cantidad = $productoData['cantidad'];
-                    $subtotal = Productos::findOrFail($productoId)->precio * $cantidad;
+                    $cantidadNueva = $productoData['cantidad'];
+                    $cantidadAnterior = $pedido->productos()->where('producto_id', $productoId)->first()->pivot->cantidad;
+
+                    // Ajustar el stock según la diferencia de cantidades
+                    if ($cantidadNueva > $cantidadAnterior) {
+                        $diferencia = $cantidadNueva - $cantidadAnterior;
+
+                        if ($producto->stock < $diferencia) {
+                            return redirect()->back()->withErrors(['error' => "No hay suficiente stock para el producto {$producto->nombre}."]);
+                        }
+
+                        $producto->decrement('stock', $diferencia);
+                    } elseif ($cantidadNueva < $cantidadAnterior) {
+                        $diferencia = $cantidadAnterior - $cantidadNueva;
+                        $producto->increment('stock', $diferencia);
+                    }
+
+                    $subtotal = $producto->precio * $cantidadNueva;
                     $pedido->productos()->updateExistingPivot($productoId, [
-                        'cantidad' => $cantidad,
+                        'cantidad' => $cantidadNueva,
                         'subtotal' => $subtotal,
                     ]);
                 }
@@ -163,15 +194,22 @@ class PedidosController extends Controller
         // Agregar nuevos productos
         if ($request->has('nuevos_productos')) {
             foreach ($request->nuevos_productos as $productoId => $productoData) {
-                // Verificar si el producto ya está asociado al pedido
-                if (!$pedido->productos->contains($productoId)) {
-                    $cantidad = $productoData['cantidad'];
-                    $subtotal = Productos::findOrFail($productoId)->precio * $cantidad;
-                    $pedido->productos()->attach($productoId, [
-                        'cantidad' => $cantidad,
-                        'subtotal' => $subtotal,
-                    ]);
+                $producto = Productos::findOrFail($productoId);
+                $cantidad = $productoData['cantidad'];
+
+                // Verificar si hay suficiente stock
+                if ($producto->stock < $cantidad) {
+                    return redirect()->back()->withErrors(['error' => "No hay suficiente stock para el producto {$producto->nombre}."]);
                 }
+
+                $subtotal = $producto->precio * $cantidad;
+                $producto->decrement('stock', $cantidad);
+
+                // Asociar el producto al pedido
+                $pedido->productos()->attach($productoId, [
+                    'cantidad' => $cantidad,
+                    'subtotal' => $subtotal,
+                ]);
             }
         }
 

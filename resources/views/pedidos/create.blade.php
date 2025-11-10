@@ -35,7 +35,11 @@
                                 ${{ number_format($producto->precio, 2) }}
                             </td>
                             <td class="px-6 py-4 text-gray-800 text-center">
-                                <input type="number" name="productos[{{ $producto->id }}][cantidad]" value="1" min="1" class="w-20 border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                                @if($producto->stock >= 1)
+                                <input type="number" name="productos[{{ $producto->id }}][cantidad]" value="1" min="1" max="{{$producto->stock}}" class="w-20 border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                                @else
+                                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Sin Stock</span>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
