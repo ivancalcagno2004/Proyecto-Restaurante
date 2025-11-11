@@ -15,10 +15,12 @@ RUN curl -sS https://getcomposer.org/installer | php && \
     php composer.phar install --no-dev --optimize-autoloader
 
 # Agregar esta parte
+# Instalar Node.js y compilar assets de Vite/Tailwind
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
-    npm install && \
+    npm install --include=dev && \
     npm run build
+
 
 EXPOSE 8000
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
