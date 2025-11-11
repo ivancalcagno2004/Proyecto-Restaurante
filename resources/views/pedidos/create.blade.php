@@ -33,6 +33,7 @@
                     <thead>
                         <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
                             <th class="px-6 py-3 text-center">Producto</th>
+                            <th class="px-6 py-3 text-center">Descripción</th>
                             <th class="px-6 py-3 text-center">Precio</th>
                             <th class="px-6 py-3 text-center">Cantidad</th>
                         </tr>
@@ -41,11 +42,11 @@
                         @foreach ($productos as $categoria => $productosCategoria)
                         <!-- Encabezado de la categoría -->
                         <tr class="bg-gray-200">
-                            <td colspan="3" class="px-6 py-3 text-left font-bold text-gray-700">
+                            <td colspan="4" class="px-6 py-3 text-left font-bold text-gray-700">
                                 @if($categoria === "plato_principal")
-                                <option value="{{ $categoria }}">Plato Principal</option>
+                                Plato Principal
                                 @else
-                                <option value="{{ $categoria }}">{{ ucfirst($categoria) }}</option>
+                                {{ ucfirst($categoria) }}
                                 @endif
                             </td>
                         </tr>
@@ -61,6 +62,13 @@
                                     @endif
                                     {{ $producto->nombre }}
                                 </label>
+                            </td>
+                            <td class="px-6 py-4 text-gray-800 text-center">
+                                @if($producto->descripcion)
+                                {{ $producto->descripcion }}
+                                @else
+                                <span class="text-gray-400 italic">Sin descripción</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 text-gray-800 text-center">
                                 ${{ number_format($producto->precio, 2) }}
@@ -81,7 +89,7 @@
 
             <!-- Botón de guardar -->
             <div class="flex justify-end">
-                <a href="{{ route('map') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2">
+                <a href="{{ url()->previous() }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2">
                     Cancelar
                 </a>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition cursor-pointer">

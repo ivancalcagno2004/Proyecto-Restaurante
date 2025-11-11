@@ -76,7 +76,7 @@
         </div>
 
         <div class="mt-6 mb-15 flex justify-end">
-            <a href="{{ route('pedidos.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2">
+            <a href="{{ url()->previous() }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2">
                 Cancelar
             </a>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition cursor-pointer">

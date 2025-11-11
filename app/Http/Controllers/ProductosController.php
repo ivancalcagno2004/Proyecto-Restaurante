@@ -27,7 +27,7 @@ class ProductosController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    /* public function store(Request $request)
     {
         // Validar los datos del formulario
         $request->validate([
@@ -43,6 +43,21 @@ class ProductosController extends Controller
 
         // Redirigir al índice con un mensaje de éxito
         return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
+    } */
+
+    public function store(Request $request)
+    {
+        // Crear un nuevo producto con valores predeterminados
+        $producto = Productos::create([
+            'nombre' => 'Nuevo Producto',
+            'descripcion' => '',
+            'precio' => 0,
+            'categoria' => 'entrada',
+            'stock' => 10,
+        ]);
+
+        // Redirigir al formulario de edición del nuevo producto
+        return redirect()->route('productos.edit', $producto->id)->with('success', 'Producto creado exitosamente. Ahora puedes editar sus detalles.');
     }
 
     /**

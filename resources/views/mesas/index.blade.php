@@ -4,8 +4,9 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Mesas</h1>
 
-    <a href="{{ route('mesas.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-        Crear nueva mesa
+    <!-- Botón flotante para crear una nueva mesa -->
+    <a href="{{ route('mesas.create') }}" class="fixed bottom-28 right-18 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition cursor-pointer font-bold text-3xl">
+        +
     </a>
 
     <div class="mt-6">

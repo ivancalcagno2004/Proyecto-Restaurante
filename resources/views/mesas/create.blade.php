@@ -41,7 +41,7 @@
 
             <!-- Botón de enviar -->
             <div class="flex justify-end">
-                <a href="{{ route('mesas.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2 cursor-pointer">
+                <a href="{{ url()->previous() }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2 cursor-pointer">
                     Cancelar
                 </a>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition cursor-pointer">
