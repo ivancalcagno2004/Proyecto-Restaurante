@@ -17,7 +17,7 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 # Agregar esta parte
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
-    npm ci && \
+    npm install && \
     npm run build
 
 EXPOSE 8000
