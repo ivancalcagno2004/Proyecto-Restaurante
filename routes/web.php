@@ -29,5 +29,5 @@ Route::get('/map', [MesasController::class, 'map'])->name('map');
 Route::post('/mesas/{id}/update-position', [MesasController::class, 'updateMesa'])->name('mesas.updatePosition');
 
 Route::get('/', function () {
-    return view('pages.map');
+    return redirect('/map');
 });
