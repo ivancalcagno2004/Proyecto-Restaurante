@@ -1,23 +1,22 @@
-# Imagen base con PHP y extensiones necesarias
+# Imagen base de PHP con Composer y extensiones comunes
 FROM php:8.2-fpm
 
-# Instalar dependencias del sistema y Composer
+# Instalar dependencias del sistema y extensiones necesarias
 RUN apt-get update && apt-get install -y \
-    git zip unzip libpq-dev libpng-dev libjpeg-dev libfreetype6-dev libonig-dev libxml2-dev curl \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
-# Instalar Composer
-COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
-
-# Copiar el código del proyecto
+# Copiar los archivos del proyecto
 WORKDIR /var/www/html
 COPY . .
 
 # Instalar dependencias de Laravel
-RUN composer install --no-dev --optimize-autoloader
+RUN curl -sS https://getcomposer.org/installer | php && \
+    php composer.phar install --no-dev --optimize-autoloader
 
-# Exponer el puerto usado por Render
-EXPOSE 10000
 
-# Comando para iniciar Laravel
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Exponer el puerto que usa Laravel
+EXPOSE 8000
+
+# Comando por defecto
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
