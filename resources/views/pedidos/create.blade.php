@@ -54,7 +54,11 @@
                         <tr class="border-b hover:bg-gray-50" data-categoria="{{ $categoria }}">
                             <td class="px-6 py-4 text-gray-800 text-center">
                                 <label>
+                                    @if($producto->stock >= 1)
                                     <input type="checkbox" name="productos[{{ $producto->id }}][id]" value="{{ $producto->id }}">
+                                    @else
+                                    <input type="checkbox" disabled>
+                                    @endif
                                     {{ $producto->nombre }}
                                 </label>
                             </td>

@@ -120,10 +120,14 @@ class PedidosController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'estado' => 'required|in:pendiente,en_preparacion,servido,cancelado',
+            'estado' => 'required|in:pendiente,en_preparacion,servido,facturado',
         ]);
 
         $pedido = Pedidos::findOrFail($id);
+        if ($request->estado === 'facturado') {
+            $mesa = Mesas::findOrFail($pedido->mesa_id);
+            $mesa->update(['estado' => 'disponible']);
+        }
         $pedido->update(['estado' => $request->estado]);
 
         return redirect()->route('pedidos.index')->with('success', 'Estado del pedido actualizado correctamente.');
@@ -135,8 +139,18 @@ class PedidosController extends Controller
     public function destroy(string $id)
     {
         $pedido = Pedidos::findOrFail($id);
-        $mesa = Mesas::findOrFail($pedido->mesa_id);
-        $mesa->update(['estado' => 'disponible']);
+        // Verificar si hay otros pedidos no facturados para la misma mesa
+        $otrosPedidos = Pedidos::where('mesa_id', $pedido->mesa_id)
+            ->where('id', '!=', $pedido->id) // Excluir el pedido actual
+            ->where('estado', '!=', 'facturado') // Buscar pedidos no facturados
+            ->exists();
+
+        if (!$otrosPedidos) {
+            // Si no hay otros pedidos no facturados, cambiar el estado de la mesa a "disponible"
+            $mesa = Mesas::findOrFail($pedido->mesa_id);
+            $mesa->update(['estado' => 'disponible']);
+        }
+
         $pedido->delete();
         return redirect()->route('pedidos.index')->with('success', 'Pedido eliminado exitosamente.');
     }
@@ -224,7 +238,7 @@ class PedidosController extends Controller
     public function getPedidoByMesa($id)
     {
         // Buscar el pedido asociado a la mesa
-        $pedido = Pedidos::where('mesa_id', $id)->where('estado', '!=', 'completado')->first();
+        $pedido = Pedidos::where('mesa_id', $id)->where('estado', '!=', 'facturado')->first();
 
         if ($pedido) {
             return response()->json(['pedido_id' => $pedido->id]);

@@ -37,7 +37,7 @@
                                 <option value="pendiente" {{ $pedido->estado === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                                 <option value="en_preparacion" {{ $pedido->estado === 'en_preparacion' ? 'selected' : '' }}>Preparando</option>
                                 <option value="servido" {{ $pedido->estado === 'servido' ? 'selected' : '' }}>Servido</option>
-                                <option value="cancelado" {{ $pedido->estado === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                                <option value="facturado" {{ $pedido->estado === 'facturado' ? 'selected' : '' }}>Facturado</option>
                             </select>
                             <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600 transition cursor-pointer">
                                 Guardar
@@ -51,8 +51,8 @@
                             <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Preparando</span>
                             @elseif ($pedido->estado === 'servido')
                             <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Servido</span>
-                            @elseif ($pedido->estado === 'cancelado')
-                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Cancelado</span>
+                            @elseif ($pedido->estado === 'facturado')
+                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Facturado</span>
                             @endif
                         </span>
                         @endif

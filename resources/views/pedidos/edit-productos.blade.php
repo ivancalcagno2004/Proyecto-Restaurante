@@ -54,7 +54,11 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-4 text-gray-800 text-center">
                             <label>
+                                @if($producto->stock >=1 )
                                 <input type="checkbox" name="nuevos_productos[{{ $producto->id }}][id]" value="{{ $producto->id }}" class="nuevo-producto-checkbox">
+                                @else
+                                <input type="checkbox" disabled>
+                                @endif
                                 {{ $producto->nombre }}
                             </label>
                         </td>
