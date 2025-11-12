@@ -2,6 +2,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar el canvas con Fabric.js
     const canvas = new fabric.Canvas('salonCanvas');
 
+        // Agregar la puerta del restaurante al canvas
+    const puerta = new fabric.Rect({
+        left: 750, // Posición X de la puerta
+        top: 20,  // Posición Y de la puerta
+        fill: '#000000', // Color de la puerta (negro)
+        width: 150, // Ancho de la puerta
+        height: 20, // Altura de la puerta
+        selectable: false, // No se puede seleccionar
+        hasControls: false, // No tiene controles de transformación
+        hoverCursor: 'default', // Cursor por defecto al pasar el mouse
+    });
+    
+    // Agregar un texto opcional para identificar la puerta
+    const textoPuerta = new fabric.Text('Puerta', {
+        left: puerta.left + 10, // Posición relativa al rectángulo
+        top: puerta.top - 20,   // Posición encima del rectángulo
+        fontSize: 14,
+        fill: '#000000', // Color del texto
+        selectable: false, // No se puede seleccionar
+        hoverCursor: 'default', // Cursor por defecto
+    });
+    
+    // Agrupar la puerta y el texto
+    const puertaGroup = new fabric.Group([puerta, textoPuerta], {
+        selectable: false, // No se puede seleccionar el grupo
+        hasControls: false, // No tiene controles de transformación
+        hoverCursor: 'default', // Cursor por defecto al pasar el mouse
+    });
+    
+    // Agregar la puerta al canvas
+    canvas.add(puertaGroup);
     // Usar la variable global `mesas` definida en Blade
     if (typeof mesas !== 'undefined') {
         // Agregar mesas al canvas

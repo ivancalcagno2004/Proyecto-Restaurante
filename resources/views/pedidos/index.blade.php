@@ -72,11 +72,11 @@
                     <td class="px-6 py-4 text-center">
                         @if (isset($quiereEditar) && $quiereEditar && $pedidoEdit->id == $pedido->id)
                         <a href="{{ route('pedidos.index') }}" class="bg-gray-500 text-white px-2 py-1 rounded ml-2 hover:bg-gray-600 transition cursor-pointer">Cancelar</a>
-                        <a href="{{ route('pedidos.edit-productos', $pedido->id) }}" class="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-blue-600 transition cursor-pointer">
+                        <a href="{{ route('pedidos.edit-productos', $pedido->id) }}" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition cursor-pointer">
                             Editar Productos
                         </a>
                         @else
-                        <a href="{{ route('pedidos.show', $pedido->id) }}" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition mr-2">
+                        <a href="{{ route('pedidos.show', $pedido->id) }}" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition">
                             Ver Detalles
                         </a>
                         <a href="{{ route('pedidos.edit', $pedido->id) }}" class="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-blue-600 transition cursor-pointer">

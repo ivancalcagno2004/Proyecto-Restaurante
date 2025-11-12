@@ -25,7 +25,13 @@
                     @foreach ($pedido->productos as $producto)
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->nombre }}</td>
-                        <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->descripcion }}</td>
+                        <td class="px-6 py-4 text-gray-800 text-center">
+                            @if($producto->descripcion)
+                            {{ $producto->descripcion }}
+                            @else
+                            <span class="text-gray-400 italic">Sin descripción</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 text-gray-800 text-center">
                             @if($producto->stock >= 1)
                             <input type="number" name="productos[{{ $producto->id }}][cantidad]" value="{{ $producto->pivot->cantidad }}" min="1" max="{{$producto->stock}}" class="w-20 border border-gray-300 rounded-lg px-2 py-1">

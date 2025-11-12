@@ -42,8 +42,20 @@
                 </tr>
             </thead>
             <tbody id="productos-tbody">
-                @foreach ($productos as $producto)
-                <tr id="producto-{{ $producto->id }}" class="border-b hover:bg-gray-50" data-categoria="{{ $producto->categoria }}">
+                @foreach ($productos as $categoria => $productosCategoria)
+                <!-- Encabezado de la categoría -->
+                <tr class="bg-gray-200">
+                    <td colspan="6" class="px-6 py-3 text-left font-bold text-gray-700">
+                        @if($categoria === "plato_principal")
+                        Plato Principal
+                        @else
+                        {{ ucfirst($categoria) }}
+                        @endif
+                    </td>
+                </tr>
+                @foreach ($productosCategoria as $producto)
+                {{-- @dd($producto) --}}
+                <tr id="producto-{{ $producto->id }}" class="border-b hover:bg-gray-50" data-categoria="{{ $categoria }}">
                     <form action="{{ route('productos.update', $producto->id) }}" method="POST">
                         @csrf
                         <td class="px-6 py-4 text-gray-800 text-center">
@@ -68,7 +80,7 @@
                             @if (isset($quiereEditar) && $quiereEditar && $productoEdit->id == $producto->id)
                             <input type="number" name="precio" value="{{ $producto->precio }}" class="w-40 border border-gray-300 rounded px-2 py-1">
                             @else
-                            $ {{ $producto->precio }}
+                            $ {{ number_format($producto->precio, 2) }}
                             @endif
                         </td>
                         <td class="px-6 py-4 text-center">
@@ -125,6 +137,7 @@
                         </td>
                     </form>
                 </tr>
+                @endforeach
                 @endforeach
             </tbody>
         </table>

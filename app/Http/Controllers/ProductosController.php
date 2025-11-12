@@ -12,8 +12,9 @@ class ProductosController extends Controller
      */
     public function index()
     {
-        $productos = Productos::all();
-        return view('productos.index', compact('productos'));
+        $productos = Productos::orderBy('categoria')->orderBy('nombre')->get()->groupBy('categoria'); // Obtener todos los productos disponibles
+        $categorias = $productos->keys()->toArray();
+        return view('productos.index', compact('productos', 'categorias'));
     }
 
     /**
@@ -74,11 +75,11 @@ class ProductosController extends Controller
      */
     public function edit($id)
     {
-        $productos = Productos::all(); // Carga todas las mesas
+        $productos = Productos::orderBy('categoria')->orderBy('nombre')->get()->groupBy('categoria'); // Obtener todos los productos disponibles
         $productoEdit = Productos::findOrFail($id); // Busca la mesa específica por ID
         $quiereEditar = true; // Define la variable para indicar que se está editando
-
-        return view('productos.index', compact('productos', 'productoEdit', 'quiereEditar')); // Pasa las variables a la vista
+        $categorias = $productos->keys()->toArray();
+        return view('productos.index', compact('productos', 'productoEdit', 'quiereEditar', 'categorias')); // Pasa las variables a la vista
     }
 
     /**

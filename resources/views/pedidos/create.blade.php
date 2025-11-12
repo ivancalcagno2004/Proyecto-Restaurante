@@ -88,12 +88,12 @@
             </div>
 
             <!-- Botón de guardar -->
-            <div class="flex justify-end">
+            <div class="mt-6 mb-18 flex justify-end align-center fixed bottom-0 left-0 w-full bg-white p-4 border-t border-gray-200">
                 <a href="{{ url()->previous() }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2">
                     Cancelar
                 </a>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition cursor-pointer">
-                    Guardar Pedido
+                    Guardar Cambios
                 </button>
             </div>
         </form>
