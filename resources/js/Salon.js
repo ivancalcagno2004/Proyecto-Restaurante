@@ -126,3 +126,143 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('No se encontraron mesas para cargar en el canvas.');
     }
 });
+
+/* document.addEventListener('DOMContentLoaded', () => {
+    const canvas = new fabric.Canvas('salonCanvas');
+
+    if (typeof mesas !== 'undefined') {
+        mesas.forEach(mesa => {
+            let color;
+            switch (mesa.estado) {
+                case 'disponible':
+                    color = '#1CCD8CFF';
+                    break;
+                case 'reservada':
+                    color = '#FFCD37FF';
+                    break;
+                case 'ocupada':
+                    color = '#ED362DFF';
+                    break;
+                default:
+                    color = '#D3D3D3';
+            }
+
+            let width = 120;
+            let height = 120;
+
+            if (mesa.capacidad > 4) {
+                width += mesa.capacidad * 10;
+            }
+
+            const borderRadius = 10;
+            const posX = mesa.x !== 50 ? mesa.x : Math.random() * 1000;
+            const posY = mesa.y !== 50 ? mesa.y : Math.random() * 1000;
+
+            const mesaRect = new fabric.Rect({
+                left: posX,
+                top: posY,
+                fill: color,
+                width: width,
+                height: height,
+                rx: borderRadius,
+                ry: borderRadius,
+                id: mesa.id,
+                nombre: mesa.nombre,
+                angle: mesa.rotada ? 90 : 0 // Aplicar rotación inicial según la columna "rotada"
+            });
+
+            const mesaText = new fabric.Text(mesa.nombre + "\nCapacidad: " + mesa.capacidad, {
+                left: mesaRect.left + 10,
+                top: mesaRect.top + 40,
+                fontSize: 18,
+                fill: 'white',
+                selectable: false
+            });
+
+            const mesaGroup = new fabric.Group([mesaRect, mesaText], {
+                left: mesaRect.left,
+                top: mesaRect.top,
+                id: mesa.id
+            });
+
+            if (mesa.capacidad > 4) {
+                mesaGroup.set({ lockRotation: false }); // Permitir rotación para mesas grandes
+            } else {
+                mesaGroup.set({ lockRotation: true }); // Bloquear rotación para mesas pequeñas
+            }
+
+            mesaGroup.on('mousedblclick', () => {
+                if (mesa.estado === 'disponible' || mesa.estado === 'reservada') {
+                    // Redirigir al formulario de creación de pedido
+                    window.location.href = `/pedidos/create/${mesa.id}`;
+                } else {
+                    // Obtener el ID del pedido asociado a la mesa
+                    fetch(`/mesas/${mesa.id}/pedido`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('No se encontró un pedido asociado a esta mesa.');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.pedido_id) {
+                                // Redirigir a los detalles del pedido
+                                window.location.href = `/pedidos/${data.pedido_id}`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('No se encontró un pedido asociado a esta mesa.');
+                        });
+                }
+            });
+            
+            // Hacer que la mesa sea movible
+            mesaGroup.set({ hasControls: true });
+
+            // Detectar rotación y actualizar la base de datos
+            mesaGroup.on('rotating', () => {
+                if (mesaGroup.angle >= 45 && mesaGroup.angle <= 135) {
+                    mesaGroup.angle = 90; // Fijar en vertical
+                } else {
+                    mesaGroup.angle = 0; // Fijar en horizontal
+                }
+            });
+
+            mesaGroup.on('modified', () => {
+                const isRotated = mesaGroup.angle === 90;
+
+                // Enviar la nueva posición y rotación al servidor
+                fetch(`/mesas/${mesa.id}/update-position`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        x: mesaGroup.left,
+                        y: mesaGroup.top,
+                        rotada: isRotated
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        console.log(`Mesa ${mesa.id} actualizada`);
+                    } else {
+                        console.error('Error al actualizar la posición y rotación');
+                    }
+                }).catch(error => console.error('Error:', error));
+            });
+
+            canvas.add(mesaGroup);
+        });
+
+        canvas.on('object:modified', (e) => {
+            const obj = e.target;
+            if (obj && obj.id) {
+                console.log(`Mesa ${obj.id} modificada`);
+            }
+        });
+    } else {
+        console.error('No se encontraron mesas para cargar en el canvas.');
+    }
+}); */

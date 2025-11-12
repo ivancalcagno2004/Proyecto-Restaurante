@@ -21,6 +21,7 @@
             <thead>
                 <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
                     <th class="px-6 py-3 text-center">Producto</th>
+                    <th class="px-6 py-3 text-center">Descripción</th>
                     <th class="px-6 py-3 text-center">Cantidad</th>
                     <th class="px-6 py-3 text-center">Precio Unitario</th>
                     <th class="px-6 py-3 text-center">Subtotal</th>
@@ -30,6 +31,13 @@
                 @foreach ($pedido->productos as $producto)
                 <tr class="border-b hover:bg-gray-50">
                     <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->nombre }}</td>
+                    <td class="px-6 py-4 text-gray-800 text-center">
+                        @if($producto->descripcion)
+                        {{ $producto->descripcion }}
+                        @else
+                        <span class="text-gray-400 italic">Sin descripción</span>
+                        @endif
+                    </td>
                     <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->pivot->cantidad }}</td>
                     <td class="px-6 py-4 text-gray-800 text-center">${{ number_format($producto->pivot->subtotal / $producto->pivot->cantidad, 2) }}</td>
                     <td class="px-6 py-4 text-gray-800 text-center">

@@ -158,8 +158,9 @@ class PedidosController extends Controller
     public function editProductos($id)
     {
         $pedido = Pedidos::with('productos')->findOrFail($id); // Cargar el pedido con los productos asociados
-        $productos = Productos::all(); // Obtener todos los productos disponibles
-        return view('pedidos.edit-productos', compact('pedido', 'productos'));
+        $productos = Productos::orderBy('categoria')->orderBy('nombre')->get()->groupBy('categoria'); // Obtener todos los productos disponibles
+        $categorias = $productos->keys()->toArray();
+        return view('pedidos.edit-productos', compact('pedido', 'productos', 'categorias'));
     }
 
     public function updateProductos(Request $request, $id)

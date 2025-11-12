@@ -16,6 +16,7 @@
                 <thead>
                     <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
                         <th class="px-6 py-3 text-center">Producto</th>
+                        <th class="px-6 py-3 text-center">Descripción</th>
                         <th class="px-6 py-3 text-center">Cantidad</th>
                         <th class="px-6 py-3 text-center">Eliminar</th>
                     </tr>
@@ -24,6 +25,7 @@
                     @foreach ($pedido->productos as $producto)
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->nombre }}</td>
+                        <td class="px-6 py-4 text-gray-800 text-center">{{ $producto->descripcion }}</td>
                         <td class="px-6 py-4 text-gray-800 text-center">
                             @if($producto->stock >= 1)
                             <input type="number" name="productos[{{ $producto->id }}][cantidad]" value="{{ $producto->pivot->cantidad }}" min="1" max="{{$producto->stock}}" class="w-20 border border-gray-300 rounded-lg px-2 py-1">
@@ -40,21 +42,51 @@
             </table>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-            <h2 class="text-xl font-bold text-gray-700 mb-4">Agregar Nuevos Productos</h2>
+        <!-- Filtro por categoría -->
+        <div class="mb-4 mt-8">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Agregar Productos al Pedido</h2>
+            <label for="categoria" class="block text-gray-700 font-medium mb-2">Filtrar por Categoría</label>
+            <select id="categoria" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">Todas las Categorías</option>
+                @foreach ($categorias as $categoria)
+                @if($categoria === "plato_principal")
+                <option value="{{ $categoria }}">Plato Principal</option>
+                @else
+                <option value="{{ $categoria }}">{{ ucfirst($categoria) }}</option>
+                @endif
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Selección de productos -->
+        <div class="mb-4">
             <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead>
                     <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
                         <th class="px-6 py-3 text-center">Producto</th>
+                        <th class="px-6 py-3 text-center">Descripción</th>
+                        <th class="px-6 py-3 text-center">Precio</th>
                         <th class="px-6 py-3 text-center">Cantidad</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($productos as $producto)
-                    <tr class="border-b hover:bg-gray-50">
+                <tbody id="productos-tbody">
+                    @foreach ($productos as $categoria => $productosCategoria)
+                    <!-- Encabezado de la categoría -->
+                    <tr class="bg-gray-200">
+                        <td colspan="4" class="px-6 py-3 text-left font-bold text-gray-700">
+                            @if($categoria === "plato_principal")
+                            Plato Principal
+                            @else
+                            {{ ucfirst($categoria) }}
+                            @endif
+                        </td>
+                    </tr>
+                    <!-- Productos de la categoría -->
+                    @foreach ($productosCategoria as $producto)
+                    <tr class="border-b hover:bg-gray-50" data-categoria="{{ $categoria }}">
                         <td class="px-6 py-4 text-gray-800 text-center">
                             <label>
-                                @if($producto->stock >=1 )
+                                @if($producto->stock >= 1)
                                 <input type="checkbox" name="nuevos_productos[{{ $producto->id }}][id]" value="{{ $producto->id }}" class="nuevo-producto-checkbox">
                                 @else
                                 <input type="checkbox" disabled>
@@ -63,19 +95,30 @@
                             </label>
                         </td>
                         <td class="px-6 py-4 text-gray-800 text-center">
+                            @if($producto->descripcion)
+                            {{ $producto->descripcion }}
+                            @else
+                            <span class="text-gray-400 italic">Sin descripción</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-gray-800 text-center">
+                            ${{ number_format($producto->precio, 2) }}
+                        </td>
+                        <td class="px-6 py-4 text-gray-800 text-center">
                             @if($producto->stock >= 1)
-                            <input type="number" name="nuevos_productos[{{ $producto->id }}][cantidad]" value="1" min="1" max="{{$producto->stock}}" class="w-20 border border-gray-300 rounded-lg px-2 py-1 nuevo-producto-cantidad" disabled>
+                            <input type="number" name="nuevos_productos[{{ $producto->id }}][cantidad]" value="1" min="1" max="{{ $producto->stock }}" class="w-20 border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 nuevo-producto-cantidad" disabled>
                             @else
                             <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Sin Stock</span>
                             @endif
                         </td>
                     </tr>
                     @endforeach
+                    @endforeach
                 </tbody>
             </table>
         </div>
 
-        <div class="mt-6 mb-15 flex justify-end">
+        <div class="mt-6 mb-18 flex justify-end align-center fixed bottom-0 left-0 w-full bg-white p-4 border-t border-gray-200">
             <a href="{{ url()->previous() }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition mr-2">
                 Cancelar
             </a>
@@ -88,6 +131,23 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const categoriaSelect = document.getElementById('categoria');
+        const productosRows = document.querySelectorAll('#productos-tbody tr');
+
+        categoriaSelect.addEventListener('change', (e) => {
+            const categoriaSeleccionada = e.target.value;
+
+            productosRows.forEach(row => {
+                const categoriaProducto = row.getAttribute('data-categoria');
+                if (categoriaSeleccionada === 'all' || categoriaProducto === categoriaSeleccionada) {
+                    row.style.display = ''; // Mostrar fila
+                } else {
+                    row.style.display = 'none'; // Ocultar fila
+                }
+            });
+        });
+
+        // Habilitar/deshabilitar el campo de cantidad según el checkbox
         const checkboxes = document.querySelectorAll('.nuevo-producto-checkbox');
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
