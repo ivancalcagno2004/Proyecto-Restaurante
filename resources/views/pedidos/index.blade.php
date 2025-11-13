@@ -22,6 +22,13 @@
                 </tr>
             </thead>
             <tbody>
+                @if($pedidos->isEmpty())
+                <tr>
+                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                        <span class="text-gray-400 italic">No hay Pedidos Registrados</span>
+                    </td>
+                </tr>
+                @else
                 @foreach ($pedidos as $pedido)
                 <tr class="border-b hover:bg-gray-50">
                     <!-- ID del pedido -->
@@ -98,6 +105,7 @@
                     </td>
                 </tr>
                 @endforeach
+                @endif
             </tbody>
         </table>
     </div>
