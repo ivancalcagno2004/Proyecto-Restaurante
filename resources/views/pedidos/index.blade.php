@@ -4,6 +4,11 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Pedidos</h1>
 
+    <!-- Botón flotante para crear un predido -->
+    <a href="{{ route('pedidos.select-mesa') }}" class="fixed bottom-28 right-33 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition cursor-pointer font-bold text-3xl">
+        +
+    </a>
+
     <div class="mt-6 overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
             <thead>

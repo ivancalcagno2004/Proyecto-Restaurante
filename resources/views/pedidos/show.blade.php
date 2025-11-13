@@ -12,7 +12,7 @@
         <p><strong>Fecha:</strong> {{ $pedido->created_at->format('d/m/Y H:i') }}</p>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+    <div class="bg-white p-6 rounded-lg shadow-md mt-6 overflow-x-auto">
         <h2 class="text-xl font-bold text-gray-700 mb-4">Productos en el Pedido</h2>
         @if ($pedido->productos->isEmpty())
         <p>No hay productos en este pedido.</p>

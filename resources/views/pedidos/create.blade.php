@@ -4,7 +4,7 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Crear Pedido para {{ $mesa->nombre }}</h1>
 
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
         <form action="{{ route('pedidos.store') }}" method="POST">
             @csrf
 

@@ -247,4 +247,10 @@ class PedidosController extends Controller
 
         return response()->json(['error' => 'No se encontró un pedido asociado a esta mesa.'], 404);
     }
+
+    public function selectMesa()
+    {
+        $mesas = Mesas::where('estado', 'disponible')->get();
+        return view('pedidos.select-mesa', compact('mesas'));
+    }
 }

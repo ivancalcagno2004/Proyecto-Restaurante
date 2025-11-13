@@ -10,7 +10,7 @@
         @csrf
         @method('PUT')
 
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
             <h2 class="text-xl font-bold text-gray-700 mb-4">Productos en el Pedido</h2>
             <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead>
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Selección de productos -->
-        <div class="mb-4">
+        <div class="mb-4 overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                 <thead>
                     <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
