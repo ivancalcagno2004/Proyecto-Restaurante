@@ -9,7 +9,7 @@
         +
     </a>
 
-    <div class="mt-6">
+    <div class="mt-6 overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
             <thead>
                 <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
@@ -22,73 +22,61 @@
             <tbody>
                 @foreach ($mesas as $mesa)
                 <tr class="border-b hover:bg-gray-50">
-                    <td class="px-6 py-4 text-gray-800">
-                        @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
-                        <form action="{{ route('mesas.update', $mesa->id) }}" method="POST">
-                            @csrf
+                    <form action="{{ route('mesas.update', $mesa->id) }}" method="POST">
+                        @csrf
+                        <td class="px-6 py-4 text-gray-800">
+                            @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
                             <input type="number" name="capacidad" value="{{ $mesa->capacidad }}" min="1" max="20" class="w-20 border border-gray-300 rounded px-2 py-1">
-                            <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600 transition cursor-pointer">
-                                Guardar
-                            </button>
-                        </form>
-                        @else
-                        {{ $mesa->capacidad }}
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 text-gray-800">
-                        @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
-                        <form action="{{ route('mesas.update', $mesa->id) }}" method="POST">
-                            @csrf
+                            @else
+                            {{ $mesa->capacidad }}
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-gray-800">
+                            @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
                             <input type="text" name="nombre" value="{{ $mesa->nombre }}" class="w-40 border border-gray-300 rounded px-2 py-1">
-                            <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600 transition cursor-pointer">
-                                Guardar
-                            </button>
-                        </form>
-                        @else
-                        {{ $mesa->nombre }}
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
-                        <form action="{{ route('mesas.update', $mesa->id) }}" method="POST">
-                            @csrf
+                            @else
+                            {{ $mesa->nombre }}
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
                             <select name="estado" class="border border-gray-300 rounded px-2 py-1">
                                 <option value="disponible" {{ $mesa->estado === 'disponible' ? 'selected' : '' }}>Disponible</option>
                                 <option value="ocupada" {{ $mesa->estado === 'ocupada' ? 'selected' : '' }}>Ocupada</option>
                                 <option value="reservada" {{ $mesa->estado === 'reservada' ? 'selected' : '' }}>Reservada</option>
                             </select>
-                            <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600 transition cursor-pointer">
+                            @else
+                            <span class="estado-label">
+                                @if ($mesa->estado === 'disponible')
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Disponible</span>
+                                @elseif ($mesa->estado === 'ocupada')
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Ocupada</span>
+                                @elseif ($mesa->estado === 'reservada')
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Reservada</span>
+                                @endif
+                            </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-center flex items-center">
+                            @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
+                            <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition cursor-pointer">
                                 Guardar
                             </button>
-                        </form>
-                        @else
-                        <span class="estado-label">
-                            @if ($mesa->estado === 'disponible')
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Disponible</span>
-                            @elseif ($mesa->estado === 'ocupada')
-                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Ocupada</span>
-                            @elseif ($mesa->estado === 'reservada')
-                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Reservada</span>
+                            <a href="{{route('mesas.index')}}" class="bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 ml-2 transition cursor-pointer">Cancelar</a>
+                            @else
+                            <a href=" {{ route('mesas.edit', $mesa->id) }}" class="bg-blue-500 text-white px-2 py-1 rounded  hover:bg-blue-600 transition cursor-pointer">
+                                Editar
+                            </a>
+                            <form action="{{ route('mesas.destroy', $mesa) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded ml-2 hover:bg-red-600 transition cursor-pointer">
+                                    Eliminar
+                                </button>
+                            </form>
                             @endif
-                        </span>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
-                        <a href="{{route('mesas.index')}}" class="bg-gray-500 text-white px-2 py-1 rounded ml-2 hover:bg-gray-600 transition cursor-pointer">Cancelar</a>
-                        @else
-                        <a href=" {{ route('mesas.edit', $mesa->id) }}" class="bg-blue-500 text-white px-2 py-1 rounded ml-2 hover:bg-blue-600 transition cursor-pointer">
-                            Editar
-                        </a>
-                        @endif
-                        <form action="{{ route('mesas.destroy', $mesa) }}" method="POST" class="inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded ml-2 hover:bg-red-600 transition cursor-pointer">
-                                Eliminar
-                            </button>
-                        </form>
-                    </td>
+                        </td>
+                    </form>
                 </tr>
                 @endforeach
             </tbody>

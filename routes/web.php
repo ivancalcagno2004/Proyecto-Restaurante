@@ -6,7 +6,7 @@ use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\PedidosController;
 
 //mesas edit y update
-Route::get('/mesas/{id}/edit', [MesasController::class, 'updateMesa'])->name('mesas.edit');
+Route::get('/mesas/{id}/edit', [MesasController::class, 'edit'])->name('mesas.edit');
 Route::post('/mesas/{id}', [MesasController::class, 'updateMesa'])->name('mesas.update');
 
 // productos edit y update
