@@ -14,7 +14,7 @@ class PedidosController extends Controller
      */
     public function index()
     {
-        $pedidos = Pedidos::all();
+        $pedidos = Pedidos::orderBy('created_at', 'desc')->get();
         return view('pedidos.index', compact('pedidos'));
     }
 
@@ -91,7 +91,10 @@ class PedidosController extends Controller
      */
     public function show($id)
     {
-        $pedido = Pedidos::with('productos')->findOrFail($id);
+        $pedido = Pedidos::with(['productos' => function ($query) {
+            $query->orderBy('pedido_detalles.cantidad', 'desc'); // Ordenar por cantidad
+        }])->findOrFail($id);
+
         if ($pedido->estado === 'en_preparacion') {
             $pedido->estado = 'Preparando';
         }
@@ -100,6 +103,7 @@ class PedidosController extends Controller
         foreach ($pedido->productos as $producto) {
             $producto->pivot->subtotal = $producto->precio * $producto->pivot->cantidad;
         }
+
         return view('pedidos.show', compact('pedido'));
     }
 
@@ -108,7 +112,7 @@ class PedidosController extends Controller
      */
     public function edit(string $id)
     {
-        $pedidos = Pedidos::all();
+        $pedidos = Pedidos::orderBy('created_at', 'desc')->get();
         $pedidoEdit = Pedidos::findOrFail($id);
         $quiereEditar = true;
         return view('pedidos.index', compact('pedidoEdit', 'quiereEditar', 'pedidos'));
@@ -157,7 +161,9 @@ class PedidosController extends Controller
 
     public function editProductos($id)
     {
-        $pedido = Pedidos::with('productos')->findOrFail($id); // Cargar el pedido con los productos asociados
+        $pedido = Pedidos::with(['productos' => function ($query) {
+            $query->orderBy('pedido_detalles.cantidad', 'desc'); // Ordenar por cantidad
+        }])->findOrFail($id);
         $productos = Productos::orderBy('categoria')->orderBy('nombre')->get()->groupBy('categoria'); // Obtener todos los productos disponibles
         $categorias = $productos->keys()->toArray();
         return view('pedidos.edit-productos', compact('pedido', 'productos', 'categorias'));

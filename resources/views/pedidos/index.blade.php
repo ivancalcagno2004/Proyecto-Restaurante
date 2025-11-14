@@ -95,6 +95,7 @@
                             Editar
                         </a>
                         @endif
+                        @if($pedido->estado == 'facturado')
                         <form action="{{ route('pedidos.destroy', $pedido->id) }}" method="POST" class="inline-block">
                             @csrf
                             @method('DELETE')
@@ -102,6 +103,7 @@
                                 Eliminar
                             </button>
                         </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach
@@ -110,4 +112,14 @@
         </table>
     </div>
 </div>
+
+<?php 
+$totalFacturado = \App\Models\Pedidos::where('estado', 'facturado')->sum('total');
+?>
+@if($totalFacturado > 0)
+<div class="fixed bottom-30 left-4 bg-white border border-gray-300 rounded-lg shadow-md p-4">
+    <span class="text-gray-800 font-semibold">Total Facturado: </span>
+    <span class="text-green-600 font-bold">${{ number_format($totalFacturado, 2) }}</span>
+</div>
+@endif
 @endsection

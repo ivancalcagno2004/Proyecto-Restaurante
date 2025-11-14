@@ -57,7 +57,7 @@
                             </span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-center flex items-center">
+                        <td class="px-6 py-4 text-center flex items-center align-middle justify-center">
                             @if (isset($quiereEditar) && $quiereEditar && $mesaEdit->id == $mesa->id)
                             <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition cursor-pointer">
                                 Guardar
