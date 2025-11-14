@@ -164,8 +164,19 @@ class PedidosController extends Controller
         $pedido = Pedidos::with(['productos' => function ($query) {
             $query->orderBy('pedido_detalles.cantidad', 'desc'); // Ordenar por cantidad
         }])->findOrFail($id);
-        $productos = Productos::orderBy('categoria')->orderBy('nombre')->get()->groupBy('categoria'); // Obtener todos los productos disponibles
+
+        // Obtener los IDs de los productos que ya están en el pedido
+        $productosEnPedido = $pedido->productos->pluck('id')->toArray();
+
+        // Obtener todos los productos disponibles, excluyendo los que ya están en el pedido
+        $productos = Productos::whereNotIn('id', $productosEnPedido)
+            ->orderBy('categoria')
+            ->orderBy('nombre')
+            ->get()
+            ->groupBy('categoria'); // Agrupar por categoría
+
         $categorias = $productos->keys()->toArray();
+
         return view('pedidos.edit-productos', compact('pedido', 'productos', 'categorias'));
     }
 
