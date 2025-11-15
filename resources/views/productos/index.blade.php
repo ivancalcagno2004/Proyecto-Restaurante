@@ -5,12 +5,12 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Productos</h1>
 
     <!-- Botón flotante para crear un producto -->
-    <a href="{{ route('productos.store') }}" onclick="event.preventDefault(); document.getElementById('create-product-form').submit();" class="fixed bottom-28 right-33 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition cursor-pointer font-bold text-3xl">
+    <a href="{{ route('productos.store') }}" onclick="event.preventDefault(); document.getElementById('create-product-form').submit();" class="fixed bottom-28 right-5 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition cursor-pointer font-bold text-3xl text-center align-middle">
         +
     </a>
 
     <!-- Botón flotante para desplazarse al fondo -->
-    <a onclick="scrollToBottom()" class="fixed bottom-28 right-18 bg-gray-500 text-white p-4 rounded-full shadow-lg hover:bg-gray-600 transition cursor-pointer font-bold text-3xl">
+    <a onclick="scrollToBottom()" class="fixed bottom-28 right-20 bg-gray-500 text-white p-4 rounded-full shadow-lg hover:bg-gray-600 transition cursor-pointer font-bold text-3xl">
         ↓
     </a>
 

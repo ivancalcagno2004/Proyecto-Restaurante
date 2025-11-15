@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 rx: borderRadius, // Radio de las esquinas
                 ry: borderRadius, // Radio de las esquinas
                 id: mesa.id,        // ID de la mesa
-                nombre: mesa.nombre // Nombre de la mesa
+                nombre: mesa.nombre, // Nombre de la mesa
             });
 
             // Agregar texto con el nombre de la mesa
@@ -87,7 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const mesaGroup = new fabric.Group([mesaRect, mesaText], {
                 left: mesaRect.left,
                 top: mesaRect.top,
-                id: mesa.id
+                id: mesa.id,
+                hoverCursor: 'grabbing', // Cursor de mover al pasar el mouse
             });
 
             if (mesa.capacidad <= 4) {

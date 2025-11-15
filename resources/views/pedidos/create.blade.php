@@ -13,8 +13,11 @@
 
             <!-- Filtro por categoría -->
             <div class="mb-4">
+                <label for="cant-personas" class="block text-gray-700 font-medium mb-2">Cantidad de Personas</label>
+                <input type="number" id="cant-personas" name="cant_personas" min="1" max="20" value="{{ $mesa->capacidad }}" class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+
                 <label for="categoria" class="block text-gray-700 font-medium mb-2">Filtrar por Categoría</label>
-                <select id="categoria" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="categoria" class="w-1/2 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="all">Todas las Categorías</option>
                     @foreach ($categorias as $categoria)
                     @if($categoria === "plato_principal")

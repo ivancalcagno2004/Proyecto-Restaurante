@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MesasController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\PedidosController;
+use App\Http\Controllers\EntradaController;
+
+// entrada edit y update
+Route::get('/entrada/edit', [EntradaController::class, 'edit'])->name('entrada.edit');
+Route::put('/entrada/update', [EntradaController::class, 'update'])->name('entrada.update');
 
 //mesas edit y update
 Route::get('/mesas/{id}/edit', [MesasController::class, 'edit'])->name('mesas.edit');

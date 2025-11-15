@@ -8,8 +8,9 @@
         <h2 class="text-xl font-bold text-gray-700 mb-4">Información del Pedido</h2>
         <p><strong>Mesa:</strong> {{ $pedido->mesa->nombre ?? 'Sin asignar' }}</p>
         <p><strong>Estado:</strong> {{ ucfirst($pedido->estado) }}</p>
-        <p><strong>Total:</strong> ${{ number_format($pedido->total, 2) }}</p>
-        <p><strong>Fecha:</strong> {{ $pedido->created_at->format('d/m/Y H:i') }}</p>
+        <p><strong>Cantidad de Personas:</strong> {{ $pedido->cant_personas }}</p>
+        <p><strong>Subtotal Entradas:</strong> ${{ number_format($pedido->cant_personas * $precioEntrada, 2) }}</p>
+        <p class="text-lg"><strong>Total:</strong> ${{ number_format($pedido->total, 2) }}</p>
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow-md mt-6 overflow-x-auto">

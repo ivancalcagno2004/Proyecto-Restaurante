@@ -10,7 +10,7 @@ class Pedidos extends Model
     use HasFactory;
 
     // Campos que se pueden asignar masivamente
-    protected $fillable = ['mesa_id', 'estado', 'total'];
+    protected $fillable = ['mesa_id', 'cant_personas', 'estado', 'total'];
 
     // Deshabilitar timestamps si no usas created_at y updated_at
     //public $timestamps = false;

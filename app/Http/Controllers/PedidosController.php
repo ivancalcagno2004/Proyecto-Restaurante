@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Entrada;
 use App\Models\Pedidos;
 use Illuminate\Http\Request;
 use App\Models\Mesas;
@@ -37,6 +38,7 @@ class PedidosController extends Controller
         // Validar los datos del formulario
         $request->validate([
             'mesa_id' => 'required|exists:mesas,id', // Verificar que la mesa exista
+            'cant_personas' => 'required|integer|min:1', // Validar cant_personas
             'productos' => 'required|array', // Verificar que se envíen productos
             'productos.*.id' => 'required|exists:productos,id', // Verificar que cada producto exista
             'productos.*.cantidad' => 'required|integer|min:1', // Verificar que la cantidad sea válida
@@ -45,11 +47,12 @@ class PedidosController extends Controller
         // Crear el pedido
         $pedido = Pedidos::create([
             'mesa_id' => $request->mesa_id,
+            'cant_personas' => $request->cant_personas,
             'estado' => 'pendiente', // Estado inicial del pedido
             'total' => 0, // Se calculará más adelante
         ]);
 
-        $total = 0;
+        $total = Entrada::getPrecio() * $request->cant_personas; // Incluir el precio de la entrada en el total
 
         // Asociar productos al pedido
         foreach ($request->productos as $productoData) {
@@ -104,7 +107,9 @@ class PedidosController extends Controller
             $producto->pivot->subtotal = $producto->precio * $producto->pivot->cantidad;
         }
 
-        return view('pedidos.show', compact('pedido'));
+        $precioEntrada = Entrada::getPrecio();
+
+        return view('pedidos.show', compact('pedido', 'precioEntrada'));
     }
 
     /**
@@ -125,6 +130,7 @@ class PedidosController extends Controller
     {
         $request->validate([
             'estado' => 'required|in:pendiente,en_preparacion,servido,facturado',
+            'cant_personas' => 'required|integer|min:1',
         ]);
 
         $pedido = Pedidos::findOrFail($id);
@@ -132,7 +138,24 @@ class PedidosController extends Controller
             $mesa = Mesas::findOrFail($pedido->mesa_id);
             $mesa->update(['estado' => 'disponible']);
         }
-        $pedido->update(['estado' => $request->estado]);
+
+        // Actualizar la cantidad de personas y recalcular el total si se envía
+        if ($request->has('cant_personas')) {
+            $pedido->cant_personas = $request->cant_personas;
+
+            // Obtener el precio de entrada desde el modelo Entrada
+            $precioEntrada = Entrada::getPrecio();
+
+            // Recalcular el total del pedido
+            $totalProductos = $pedido->productos()->sum('pedido_detalles.subtotal'); // Sumar subtotales de productos
+            $total = ($precioEntrada * $pedido->cant_personas) + $totalProductos;
+
+            $pedido->update([
+                'cant_personas' => $pedido->cant_personas,
+                'total' => $total, // Actualizar el total
+                'estado' => $request->estado,
+            ]);
+        }
 
         return redirect()->route('pedidos.index')->with('success', 'Estado del pedido actualizado correctamente.');
     }

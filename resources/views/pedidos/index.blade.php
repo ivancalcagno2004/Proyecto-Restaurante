@@ -5,7 +5,7 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Pedidos</h1>
 
     <!-- Botón flotante para crear un predido -->
-    <a href="{{ route('pedidos.select-mesa') }}" class="fixed bottom-28 right-33 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition cursor-pointer font-bold text-3xl">
+    <a href="{{ route('pedidos.select-mesa') }}" class="fixed bottom-28 right-18 bg-blue-500 text-white px-6 py-4 rounded-full shadow-lg hover:bg-blue-600 transition cursor-pointer font-bold text-3xl text-center">
         +
     </a>
 
@@ -14,6 +14,7 @@
             <thead>
                 <tr class="bg-gray-100 text-gray-700 uppercase text-sm">
                     <th class="px-6 py-3 text-center">ID</th>
+                    <th class="px-6 py-3 text-center">Personas</th>
                     <th class="px-6 py-3 text-center">Mesa</th>
                     <th class="px-6 py-3 text-center">Estado</th>
                     <th class="px-6 py-3 text-center">Total</th>
@@ -34,17 +35,26 @@
                     <!-- ID del pedido -->
                     <td class="px-6 py-4 text-gray-800 text-center">{{ $pedido->id }}</td>
 
-                    <!-- Mesa asociada -->
-                    <td class="px-6 py-4 text-gray-800 text-center">
-                        {{ $pedido->mesa->nombre ?? 'Sin asignar' }}
-                    </td>
+                    <form action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <!-- Cantidad de personas -->
+                        <td class="px-6 py-4 text-gray-800 text-center">
+                            @if (isset($quiereEditar) && $quiereEditar && $pedidoEdit->id == $pedido->id)
+                            <input type="number" name="cant_personas" value="{{ $pedido->cant_personas }}" min="1" class="border border-gray-300 rounded px-2 py-1 w-20 text-center">
+                            @else
+                            {{ $pedido->cant_personas }}
+                            @endif
+                        </td>
 
-                    <!-- Estado del pedido -->
-                    <td class="px-6 py-4 text-center">
-                        @if (isset($quiereEditar) && $quiereEditar && $pedidoEdit->id == $pedido->id)
-                        <form action="{{ route('pedidos.update', $pedido->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
+                        <!-- Mesa asociada -->
+                        <td class="px-6 py-4 text-gray-800 text-center">
+                            {{ $pedido->mesa->nombre ?? 'Sin asignar' }}
+                        </td>
+
+                        <!-- Estado del pedido -->
+                        <td class="px-6 py-4 text-center">
+                            @if (isset($quiereEditar) && $quiereEditar && $pedidoEdit->id == $pedido->id)
                             <select name="estado" class="border border-gray-300 rounded px-2 py-1">
                                 <option value="pendiente" {{ $pedido->estado === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
                                 <option value="en_preparacion" {{ $pedido->estado === 'en_preparacion' ? 'selected' : '' }}>Preparando</option>
@@ -54,21 +64,21 @@
                             <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded ml-2 hover:bg-green-600 transition cursor-pointer">
                                 Guardar
                             </button>
-                        </form>
-                        @else
-                        <span class="estado-label">
-                            @if ($pedido->estado === 'pendiente')
-                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Pendiente</span>
-                            @elseif ($pedido->estado === 'en_preparacion')
-                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Preparando</span>
-                            @elseif ($pedido->estado === 'servido')
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Servido</span>
-                            @elseif ($pedido->estado === 'facturado')
-                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Facturado</span>
+                            @else
+                            <span class="estado-label">
+                                @if ($pedido->estado === 'pendiente')
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Pendiente</span>
+                                @elseif ($pedido->estado === 'en_preparacion')
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Preparando</span>
+                                @elseif ($pedido->estado === 'servido')
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">Servido</span>
+                                @elseif ($pedido->estado === 'facturado')
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">Facturado</span>
+                                @endif
+                            </span>
                             @endif
-                        </span>
-                        @endif
-                    </td>
+                        </td>
+                    </form>
 
                     <!-- Total del pedido -->
                     <td class="px-6 py-4 text-gray-800 text-center">
